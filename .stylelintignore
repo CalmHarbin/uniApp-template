@@ -1,0 +1,6 @@
+**/*.js
+**/*.ts
+dist
+node_modules
+index.html
+*.md

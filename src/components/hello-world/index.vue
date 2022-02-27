@@ -7,6 +7,7 @@ import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 
 export default defineComponent({
+    name: 'hello-world',
     setup() {
         const store = useStore()
         console.log('useStore访问store', store.state.system.title)
