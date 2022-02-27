@@ -11,6 +11,14 @@ export default defineConfig({
             '@': resolve(__dirname, 'src')
         }
     },
+    css: {
+        // css预处理器
+        preprocessorOptions: {
+            scss: {
+                additionalData: '@import "./src/styles/global.scss";'
+            }
+        }
+    },
     // 开发服务器配置
     server: {
         host: '0.0.0.0',
