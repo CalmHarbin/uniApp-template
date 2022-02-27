@@ -106,39 +106,57 @@ npx eslint --init
 ```
 
 -   How would you like to use ESLint? （你想如何使用 ESLint?）
+
     <img src="http://file.calmharbin.icu/c1424c45d06d4900807b3e0435911f4e_tplv-k3u1fbpfcp-watermark.png" width="400">
+
     我们这里选择 To check syntax, find problems, and enforce code style（检查语法、发现问题并强制执行代码风格）
 
 -   What type of modules does your project use?（你的项目使用哪种类型的模块?）
+
     <img src="http://file.calmharbin.icu/26e9ec1fd2934265847b0dabe908e6be_tplv-k3u1fbpfcp-watermark.png" width="400">
+
     我们这里选择 JavaScript modules (import/export)
 
 -   Which framework does your project use? （你的项目使用哪种框架?）
+
     <img src="http://file.calmharbin.icu/412df4bebb2c43b2858d5093652cc8ca_tplv-k3u1fbpfcp-watermark.png" width="400">
+
     我们这里选择 Vue.js
 
 -   Does your project use TypeScript?（你的项目是否使用 TypeScript？）
+
     <img src="http://file.calmharbin.icu/ee8aa15a0de84f2d9f16402f6870b3cd_tplv-k3u1fbpfcp-watermark.png" width="400">
+
     我们这里选择 Yes
 
 -   Where does your code run?（你的代码在哪里运行?）
+
     <img src="http://file.calmharbin.icu/c86eb167b09a414dabb7ec3edb70a377_tplv-k3u1fbpfcp-watermark.png" width="400">
+
     我们这里选择 Browser 和 Node（按空格键进行选择，选完按回车键确定）
 
 -   How would you like to define a style for your project?（你想怎样为你的项目定义风格？）
+
     <img src="http://file.calmharbin.icu/f8beb21b44a14dbba7e0b9153d1f6a03_tplv-k3u1fbpfcp-watermark.png" width="400">
+
     我们这里选择 Use a popular style guide（使用一种流行的风格指南）
 
 -   Which style guide do you want to follow?（你想遵循哪一种风格指南?）
+
     <img src="http://file.calmharbin.icu/596c3755247a45a990d8c847d76fdad1_tplv-k3u1fbpfcp-watermark.png" width="400">
+
     我们这里选择 Airbnb（github 上 star 最高）
 
 -   What format do you want your config file to be in?（你希望你的配置文件是什么格式?）
+
     <img src="http://file.calmharbin.icu/6217a3458af34010bd8a3a55a0c03629_tplv-k3u1fbpfcp-watermark.png" width="400">
+
     我们这里选择 JavaScript
 
 -   Would you like to install them now with npm?（你想现在就用 NPM 安装它们吗?）
+
     <img src="http://file.calmharbin.icu/6b1be913778348d1a59c2d7ea4c27a0c_tplv-k3u1fbpfcp-watermark.png" width="400">
+
     我们这里选择 No，根据提示需要安装的依赖包，我们自己使用 pnpm 安装。
 
 ```sh
