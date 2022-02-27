@@ -5,11 +5,11 @@ export interface systemStateType {
     title: string
 }
 
-const moduleApp: Module<systemStateType, rootStateType> = {
+const systemModule: Module<systemStateType, rootStateType> = {
     namespaced: true,
     state: () => ({
         title: '你好，我是uni-app'
     })
 }
 
-export default moduleApp
+export default systemModule

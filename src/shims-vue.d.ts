@@ -10,7 +10,7 @@ import { Store } from 'vuex'
 // declare module '@vue/runtime-core' {
 declare module 'vue' {
     interface ComponentCustomProperties {
-        username: string
+        // 这里扩展this.$store，还可以在这里对this添加其他的声明
         $store: Store<StateType>
     }
 }

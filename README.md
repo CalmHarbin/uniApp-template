@@ -1,50 +1,108 @@
 ## uniApp-template
 
+### 前言
+
+因为每次在开发新项目时，都需要一个开箱即用的基础框架，避免重新开始搭建而浪费时间，遂记录下从零开始搭建一个开箱即用的框架。随着前端的发展，将来版本的更新需要重新搭建框架时也可以作个参考。
+
 实现功能
 
--   使用 `vite` + `vue3`
--   使用 `typescript`
--   使用 `scss` 来编写 css
--   使用 `Eslint` + `Stylelint` + `Prettier` 来规范和格式化代码
+-   <input type="checkbox" checked>vue 使用 `vue3` 版本进行开发</input>
+-   <input type="checkbox" checked>构建工具 使用 `vite`</input>
+-   <input type="checkbox" checked>使用 `vuex`</input>
+-   <input type="checkbox" checked>集成 `typescript`</input>
+-   <input type="checkbox" checked>集成 `scss` 来编写 css</input>
+-   <input type="checkbox" checked>集成 `Eslint` + `Stylelint` + `Prettier` 来规范和格式化代码</input>
+-   <input type="checkbox">封装 `uni-request` 请求</input>
+-   <input type="checkbox">环境区分</input>
+-   <input type="checkbox">集成 `uni-ui`</input>
+
+项目整体目录
+
+```js
+├── dist/                   // 打包文件的目录
+├── src/
+|   ├── assets/             // 存放图片
+|   ├── components/         // 自定义组件
+|   ├── pages/              // 页面
+|   ├── store/
+|   |   ├── index.ts        // store 配置文件
+|   |   ├── index.d.ts      // 声明文件
+|   |   └── modules
+|   |       └── system.ts   // 自己的业务模块，这里写|个示例
+|   ├── styles/             // 样式文件
+|   ├── App.vue
+|   ├── env.d.ts
+|   ├── main.ts
+|   ├── manifest.json
+|   ├── pages.json
+|   ├── shims-vue.d.ts
+|   └── uni.scss
+├── .eslintignore           // eslint忽略文件
+├── .eslintrc.js            // eslint配置文件
+├── .gitignore              // git忽略文件
+├── .prettierrc             // prettier配置文件
+├── .stylelintignore        // stylelint忽略文件
+├── index.html
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.js
+├── README.md
+├── stylelint.config.js     // stylelint配置文件
+├── tsconfig.json
+└── vite.config.ts
+```
 
 ### 生成基本框架
 
-```sh
-npx degit dcloudio/uni-preset-vue#vite-ts my-vue3-project
+使用官方提供 Vue3/Vite 版本的模板来生成我们的基础项目。
+
+```cmd
+npx degit dcloudio/uni-preset-vue#vite-ts uniApp-template
 ```
 
 或者直接从 [gitee](https://gitee.com/dcloud/uni-preset-vue/repository/archive/vite-ts.zip) 上下载。
 
 ### 做一些简单的配置
 
-我们对生成的基础框架做一些自定义的配置。
+基础模板中功能比较少，我们对生成的基础框架添加一些自定义的配置。
 
 1. 规范目录
-2. 配置别名
-3. 配置代理
-4. 打包调整
+2. 配置别名 `@` 来表示 `src` 目录
+3. 配置代理解决开发环境跨域的问题
+4. 打包调整生成规范的文件
 
 修改 vite.config.ts 文件
 
 ```js
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-// 如果这里飘红则安装下依赖。pnpm add @types/node -D
+import uni from '@dcloudio/vite-plugin-uni'
 import { resolve } from 'path'
 
+// https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [uni()],
     resolve: {
         // 配置别名
         alias: {
             '@': resolve(__dirname, 'src')
         }
     },
+    css: {
+        // css预处理器
+        preprocessorOptions: {
+            scss: {
+                // 因为uni.scss可以全局使用，这里根据自己的需求调整
+                additionalData: '@import "./src/styles/global.scss";'
+            }
+        }
+    },
     // 开发服务器配置
     server: {
         host: '0.0.0.0',
+        port: 8080,
         // 请求代理
         proxy: {
+            // 个人习惯，这里就用/dev作为前缀了
             '/dev': {
                 target: 'https://xxx.com/api',
                 changeOrigin: true,
@@ -56,7 +114,7 @@ export default defineConfig({
     build: {
         // 禁用 gzip 压缩大小报告，以提升构建性能
         brotliSize: false,
-        /** 配置打包js,css,img分别在不同文件夹start */
+        /** 配置h5打包js,css,img分别在不同文件夹start */
         assetsDir: 'static/img/',
         rollupOptions: {
             output: {
@@ -65,12 +123,12 @@ export default defineConfig({
                 assetFileNames: 'static/[ext]/[name]-[hash].[ext]'
             }
         }
-        /** 配置打包问js,css,img分别在不同文件夹end */
+        /** 配置h5打包js,css,img分别在不同文件夹end */
     }
 })
 ```
 
-同时 tsconfig.json 添加写别名使编辑器可以识别
+在 `tsconfig.json` 中添加配置，使编辑器可以识别我们的别名。
 
 ```json
 {
@@ -81,7 +139,7 @@ export default defineConfig({
 }
 ```
 
-然后安装依赖，运行到 H5 看看是否成功。
+最后使用 `pnpm` 安装依赖，然后运行到 H5 看看是否成功。
 
 ```sh
 # 安装依赖
@@ -91,15 +149,160 @@ pnpm i
 npm run dev:h5
 ```
 
-<img src="http://file.calmharbin.icu/20220227174631.png" height="400" style="border: 1px solid #ddd">
+<div style="display: inline-block;border: 1px solid #ddd;font-size: 0;">
+    <img src="http://file.calmharbin.icu/20220227174631.png" height="400">
+</div>
 
-### 添加 eslint
+### 配置 vuex
+
+因为基础模板中已经给我们依赖了 vuex，所以我们这里就不用再安装了，我们需要新建一个 `src/store` 文件夹来管理我们的 `store`。
+
+```
+└── src/
+    ├── store/
+        ├── index.ts  // store 配置文件
+        ├── index.d.ts  // 声明文件
+        ├── modules
+            ├── system.ts // 自己的业务模块，这里写一个示例
+```
+
+首先编写我们的声明文件，这里对我们所有的 store 添加一个声明，以便我们在使用的使用编辑器有提示。
+
+`src/store/index.d.ts`
+
+```js
+import { rootStateType } from './index'
+import { systemStateType } from './modules/system'
+
+export interface StateType extends rootStateType {
+    system: systemStateType;
+}
+```
+
+然后在配置文件中来实例化 store
+
+`src/store/index.ts`
+
+```js
+import { createStore } from 'vuex'
+import { StateType } from './index.d'
+
+// 批量引入其他module，
+const files = import.meta.globEager('./modules/*.ts') // vite的写法
+const keys = Object.keys(files)
+
+const modules: any = {}
+
+keys.forEach((key) => {
+    if (Object.prototype.hasOwnProperty.call(files, key)) {
+        // 提取文件的名字作为模块名
+        modules[key.replace(/(\.\/modules\/|\.ts)/g, '')] = files[key].default
+    }
+})
+
+/** 全局的state,这个看自己的需求，如果有用到就在createStore中添加 */
+export interface rootStateType {}
+
+export default createStore <
+    StateType >
+    {
+        modules
+    }
+```
+
+在 modules 文件夹中根据自己的业务来创建模块，同时在 index.d.ts 中加入声明。例如：`src/store/modules/system.ts`
+
+```js
+import { Module } from 'vuex'
+import { rootStateType } from '@/store'
+
+export interface systemStateType {
+    title: string;
+}
+
+const systemModule: Module<systemStateType, rootStateType> = {
+    namespaced: true,
+    state: () => ({
+        title: '你好，我是uni-app'
+    })
+}
+
+export default systemModule
+```
+
+在 `main.ts` 文件中挂载 vuex
+
+```js
+import { createSSRApp } from 'vue'
+import App from './App.vue'
+import store from './store'
+
+// eslint-disable-next-line import/prefer-default-export
+export function createApp() {
+    const app = createSSRApp(App).use(store)
+    return {
+        app
+    }
+}
+```
+
+最后使用 vuex，常见的两种用法。
+
+```js
+// 使用this
+this.$store.state.system.title
+
+// 使用useStore
+import { useStore } from 'vuex'
+const store = useStore()
+console.log(store.state.system.title)
+```
+
+<img src="http://file.calmharbin.icu/20220227223112.png" width="400">
+
+到这一步我们已经可以正常使用 vuex 了，但是此时会发现编辑器对 store 没有检测到 ts 类型声明。需要我们扩展下 ts 类型声明。
+
+创建 `src/shims-vue.d.ts`。名字其实无所谓，只要是在 src 下的.d.ts 文件就行，这里延续 vue 风格的命名。
+
+```js
+// import 'vue' // 必须要引入vue,否则就成了覆盖
+import { StateType } from '@/store/index.d'
+import { InjectionKey } from 'vue'
+import { Store } from 'vuex'
+
+/**
+ * 这里为什么用vue，而不用@vue/runtime-core，是因为使用pnpm安装依赖是，node_modules中没有@vue/runtime-core，
+ * 会导致找不到模块而类型声明失败。
+ */
+// declare module '@vue/runtime-core' {
+declare module 'vue' {
+    interface ComponentCustomProperties {
+        // 这里扩展this.$store，还可以在这里对this添加其他的声明
+        $store: Store<StateType>
+    }
+}
+
+// 扩展useStore声明
+declare module 'vuex' {
+    export function useStore<S = StateType>(injectKey?: InjectionKey<Store<S>> | string): Store<S>
+}
+
+// 这个导出一个东西也可以，或者上面引入vue
+export {}
+
+```
+
+<img src="http://file.calmharbin.icu/20220227224020.png" width="400">
+
+### 集成 eslint
+
+安装 `eslint`
 
 ```
 pnpm add eslint -D
 ```
 
-生成配置文件
+生成 `eslint` 配置文件，这一块参考是参考这篇文件写的。[原文地址](https://juejin.cn/post/6951649464637636622#heading-13)
 
 ```
 npx eslint --init
@@ -157,7 +360,7 @@ npx eslint --init
 
     <img src="http://file.calmharbin.icu/6b1be913778348d1a59c2d7ea4c27a0c_tplv-k3u1fbpfcp-watermark.png" width="400">
 
-    我们这里选择 No，根据提示需要安装的依赖包，我们自己使用 pnpm 安装。
+    我们这里选择 No，根据提示需要安装的依赖包，我们自己使用 pnpm 安装。注意 eslint 的版本，之前我们安装过可以不再安装了。
 
 ```sh
 pnpm add -D eslint-plugin-vue@latest @typescript-eslint/eslint-plugin@latest eslint-config-airbnb-base@latest eslint@^8.2.0 eslint-plugin-import@^2.25.2 @typescript-eslint/parser@latest
@@ -170,7 +373,9 @@ index.html
 *.d.ts
 ```
 
-### 安装 stylelint
+### 集成 stylelint
+
+我们可以使用 stylelint 来规范我们的 css 写法。
 
 ```
 pnpm add -D stylelint stylelint-config-rational-order stylelint-config-recommended-scss stylelint-config-recommended-vue stylelint-config-standard-scss stylelint-order
@@ -206,13 +411,17 @@ index.html
 *.md
 ```
 
-### 安装 prettier
+### 集成 prettier
+
+我们使用 prettier 来搭配 eslint 和 stylelint 使用。
+
+安装依赖
 
 ```sh
 pnpm add -D prettier eslint-config-prettier eslint-plugin-prettier stylelint-config-prettier
 ```
 
-添加 prettier 的配置文件 `.prettierrc`
+根目录下添加 prettier 的配置文件 `.prettierrc`
 
 ```
 {
@@ -230,6 +439,7 @@ pnpm add -D prettier eslint-config-prettier eslint-plugin-prettier stylelint-con
 
 ```js
 extends: [
+    // ...
     'plugin:prettier/recommended' // 一定要放在最后一项
 ],
 rules: {
@@ -255,13 +465,17 @@ extends: [
 ]
 ```
 
-### 常见报错及解决办法
+完成以上步骤，就可以愉快的敲代码了。
+
+#### 你可能遇到的问题：
 
 ##### **eslint 报：使用别名报错 import/no-unresolved**
 
 <img src="http://file.calmharbin.icu/WEBRESOURCE04d1585a4f7961d2c1cf34a531fb9b69.png" width="400">
 
-安装
+解决办法：
+
+安装依赖
 
 ```
 pnpm add eslint-import-resolver-alias -D
@@ -297,4 +511,16 @@ rules: {
 
 <img src="http://file.calmharbin.icu/WEBRESOURCE31c62db7289cb34d48a11f6a84d8a17c.png" width="400">
 
-将报错的文件添加到忽略文件（`.stylelintignore`）即可
+解决办法：将报错的文件添加到忽略文件（`.stylelintignore`）即可
+
+##### **vite.config.ts 文件报错**
+
+<img src="http://file.calmharbin.icu/20220227225628.png" width="400">
+
+解决办法：配置 eslint 规则
+
+```js
+rules: {
+    'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
+}
+```

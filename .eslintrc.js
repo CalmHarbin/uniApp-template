@@ -4,7 +4,12 @@ module.exports = {
         es2021: true,
         node: true
     },
-    extends: ['plugin:vue/essential', 'airbnb-base', 'plugin:prettier/recommended'],
+    extends: [
+        'plugin:vue/essential',
+        'airbnb-base',
+        // 一定要放在最后一项
+        'plugin:prettier/recommended'
+    ],
     parserOptions: {
         ecmaVersion: 'latest',
         parser: '@typescript-eslint/parser',
@@ -41,6 +46,7 @@ module.exports = {
                 ts: 'never',
                 tsx: 'never'
             }
-        ]
+        ],
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
     }
 }
