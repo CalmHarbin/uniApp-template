@@ -4,11 +4,15 @@
         <view class="text-area">
             <text class="title">{{ title }}</text>
         </view>
+
+        <hello-world></hello-world>
     </view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import HelloWorld from '@/components/hello-world/index.vue'
+
 const title = ref('Hello')
 </script>
 
