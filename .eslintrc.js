@@ -5,7 +5,7 @@ module.exports = {
         node: true
     },
     extends: [
-        'plugin:vue/essential',
+        'plugin:vue/vue3-recommended',
         'airbnb-base',
         // 一定要放在最后一项
         'plugin:prettier/recommended'
