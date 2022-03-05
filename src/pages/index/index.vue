@@ -28,7 +28,7 @@ const title = ref('Hello')
 .logo {
     width: 200rpx;
     height: 200rpx;
-    margin: 200rpx auto 50rpx;
+    margin: 50rpx auto;
 }
 
 .text-area {
