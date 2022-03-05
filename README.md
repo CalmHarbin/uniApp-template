@@ -6,20 +6,24 @@
 
 实现功能
 
--   <input type="checkbox" checked>vue 使用 `vue3` 版本进行开发</input>
--   <input type="checkbox" checked>构建工具 使用 `vite`</input>
--   <input type="checkbox" checked>使用 `vuex`</input>
--   <input type="checkbox" checked>集成 `typescript`</input>
--   <input type="checkbox" checked>集成 `scss` 来编写 css</input>
+-   <input type="checkbox" checked>使用 `Vue3` 进行开发</input>
+-   <input type="checkbox" checked>构建工具 使用 `Vite`</input>
+-   <input type="checkbox" checked>使用 `Vuex`</input>
+-   <input type="checkbox" checked>集成 `Typescript`</input>
+-   <input type="checkbox" checked>集成 `Scss` 来编写 css</input>
 -   <input type="checkbox" checked>集成 `Eslint` + `Stylelint` + `Prettier` 来规范和格式化代码</input>
--   <input type="checkbox">封装 `uni-request` 请求</input>
--   <input type="checkbox">环境区分</input>
+-   <input type="checkbox" checked>环境区分</input>
+-   <input type="checkbox" checked>封装 `uni-request` 请求</input>
+-   <input type="checkbox">集成 `Mock` 辅助开发</input>
 -   <input type="checkbox">集成 `uni-ui`</input>
 
 项目整体目录
 
 ```js
 ├── dist/                   // 打包文件的目录
+├── config/                 // 环境配置目录
+|   ├── .env.development    // 开发环境
+|   ├── .env.production     // 生产环境
 ├── src/
 |   ├── assets/             // 存放图片
 |   ├── components/         // 自定义组件
@@ -366,6 +370,19 @@ npx eslint --init
 pnpm add -D eslint-plugin-vue@latest @typescript-eslint/eslint-plugin@latest eslint-config-airbnb-base@latest eslint@^8.2.0 eslint-plugin-import@^2.25.2 @typescript-eslint/parser@latest
 ```
 
+修改`.eslintrc.js`文件
+
+```
+// 因为我们使用的是 vue3，所以使用 vue3 的校验规则
+plugin:vue/essential 修改成 plugin:vue/vue3-recommended
+
+// 增加uni的声明
+globals: {
+    /** 避免uni报错 */
+    uni: true
+},
+```
+
 增加 eslint 忽略文件 `src/.eslintignore`
 
 ```
@@ -523,4 +540,135 @@ rules: {
 rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
 }
+```
+
+**编译器宏，如 defineProps 和 defineEmits 生成 no-undef 警告**
+
+<img src="http://file.calmharbin.icu/WEBRESOURCEbd009c10b10265b15d30b93b88477b6c.png" width="400">
+
+修改 `.eslintrc.js`
+
+```
+env: {
+    'vue/setup-compiler-macros': true
+}
+```
+
+### 环境区分
+
+在根目录下新建 config 文件夹用来存放环境变量配置，同时修改 vite 环境变量的根目录
+
+修改 `vite.config.js`
+
+```js
+export default defineConfig({
+    envDir: resolve(__dirname, 'config')
+})
+```
+
+同时新增 config 文件夹
+
+```js
+├── config/
+|   ├── .env.development        // 开发环境
+|   ├── .env.production         // 生产环境
+```
+
+### 封装 `uni-request` 请求
+
+新建 `src/utils/request/index.ts` 用来存放我们的代码。
+
+```ts
+/**
+ * uni-request请求封装
+ * 1. 统一配置接口地址
+ * 2. 统一设置超时时间/报文格式/报文加密
+ * 3. 统一身份认证
+ * 4. 统一处理登录超时/接口异常提示
+ * 5. 统一返回接口格式
+ */
+
+type responseType = {
+    code: number
+    success: boolean
+    msg: string
+    result: any
+}
+
+const request = (config: UniApp.RequestOptions) => {
+    let url: string
+    if (/^(http|https):\/\/.*/.test(config.url)) {
+        // 如果是以http/https开头的则不添加VUE_BASE_URL
+        url = config.url
+    } else {
+        url = import.meta.env.VUE_BASE_URL + config.url
+    }
+    return new Promise<responseType>((resolve, reject) => {
+        uni.request({
+            ...config,
+            url,
+            timeout: config.timeout || 60000,
+            success(res) {
+                // 200状态码表示成功
+                if (res.statusCode === 200) {
+                    resolve(res.data as any)
+                    return
+                }
+                /**
+                 * 这里可以做一些登录超时/接口异常提示等处理
+                 */
+                reject(res.data)
+            },
+            fail(result) {
+                reject(result)
+            }
+        })
+    })
+}
+
+export default {
+    /**
+     * get请求
+     * @param url 请求地址
+     * @param data 请求的参数
+     * @param options 其他请求配置
+     */
+    get: (url: string, data?: UniApp.RequestOptions['data'], options?: UniApp.RequestOptions) => {
+        return request({
+            ...options,
+            url,
+            data,
+            method: 'GET'
+        })
+    },
+    /**
+     * post请求
+     * @param url 请求地址
+     * @param data 请求的参数
+     * @param options 其他请求配置
+     */
+    post: (url: string, data?: UniApp.RequestOptions['data'], options?: UniApp.RequestOptions) => {
+        return request({
+            ...options,
+            url,
+            data,
+            method: 'POST'
+        })
+    }
+}
+```
+
+使用方式
+
+```ts
+import request from '@/utils/request'
+
+request
+    .get('/api/getList', {
+        page: 1,
+        size: 20
+    })
+    .then((res) => {
+        console.log(res)
+    })
 ```
