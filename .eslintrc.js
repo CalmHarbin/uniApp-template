@@ -25,6 +25,11 @@ module.exports = {
             }
         }
     },
+    globals: {
+        /** 避免uni报错 */
+        uni: true,
+        UniApp: true
+    },
     rules: {
         'prettier/prettier': [
             'error',
