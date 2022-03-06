@@ -2,7 +2,7 @@
 
 ### 前言
 
-因为每次在开发新项目时，都需要一个开箱即用的基础框架，避免重新开始搭建而浪费时间，遂记录下从零开始搭建一个开箱即用的框架。随着前端的发展，将来版本的更新需要重新搭建框架时也可以作个参考。
+因为每次在开发新项目时，都需要一个开箱即用的基础框架，避免重新开始搭建而浪费时间，遂记录下从零开始搭建一个开箱即用的框架。随着前端的发展，未来版本的更新需要重新搭建框架时也可以作个参考。
 
 实现功能
 
@@ -19,9 +19,9 @@
 
 项目整体目录
 
-```js
+```ts
 ├── dist/                   // 打包文件的目录
-├── config/                 // 环境配置目录
+├── env/                 // 环境配置目录
 |   ├── .env.development    // 开发环境
 |   ├── .env.production     // 生产环境
 ├── src/
@@ -77,7 +77,7 @@ npx degit dcloudio/uni-preset-vue#vite-ts uniApp-template
 
 修改 vite.config.ts 文件
 
-```js
+```ts
 import { defineConfig } from 'vite'
 import uni from '@dcloudio/vite-plugin-uni'
 import { resolve } from 'path'
@@ -134,7 +134,7 @@ export default defineConfig({
 
 在 `tsconfig.json` 中添加配置，使编辑器可以识别我们的别名。
 
-```json
+```tson
 {
     "baseUrl": "./",
     "paths": {
@@ -174,12 +174,12 @@ npm run dev:h5
 
 `src/store/index.d.ts`
 
-```js
+```ts
 import { rootStateType } from './index'
 import { systemStateType } from './modules/system'
 
 export interface StateType extends rootStateType {
-    system: systemStateType;
+    system: systemStateType
 }
 ```
 
@@ -187,7 +187,7 @@ export interface StateType extends rootStateType {
 
 `src/store/index.ts`
 
-```js
+```ts
 import { createStore } from 'vuex'
 import { StateType } from './index.d'
 
@@ -216,12 +216,12 @@ export default createStore <
 
 在 modules 文件夹中根据自己的业务来创建模块，同时在 index.d.ts 中加入声明。例如：`src/store/modules/system.ts`
 
-```js
+```ts
 import { Module } from 'vuex'
 import { rootStateType } from '@/store'
 
 export interface systemStateType {
-    title: string;
+    title: string
 }
 
 const systemModule: Module<systemStateType, rootStateType> = {
@@ -236,7 +236,7 @@ export default systemModule
 
 在 `main.ts` 文件中挂载 vuex
 
-```js
+```ts
 import { createSSRApp } from 'vue'
 import App from './App.vue'
 import store from './store'
@@ -252,7 +252,7 @@ export function createApp() {
 
 最后使用 vuex，常见的两种用法。
 
-```js
+```ts
 // 使用this
 this.$store.state.system.title
 
@@ -268,7 +268,7 @@ console.log(store.state.system.title)
 
 创建 `src/shims-vue.d.ts`。名字其实无所谓，只要是在 src 下的.d.ts 文件就行，这里延续 vue 风格的命名。
 
-```js
+```ts
 // import 'vue' // 必须要引入vue,否则就成了覆盖
 import { StateType } from '@/store/index.d'
 import { InjectionKey } from 'vue'
@@ -293,7 +293,6 @@ declare module 'vuex' {
 
 // 这个导出一个东西也可以，或者上面引入vue
 export {}
-
 ```
 
 <img src="http://file.calmharbin.icu/20220227224020.png" width="400">
@@ -379,7 +378,8 @@ plugin:vue/essential 修改成 plugin:vue/vue3-recommended
 // 增加uni的声明
 globals: {
     /** 避免uni报错 */
-    uni: true
+    uni: true,
+    UniApp: true
 },
 ```
 
@@ -400,7 +400,7 @@ pnpm add -D stylelint stylelint-config-rational-order stylelint-config-recommend
 
 根目录下新增配置文件 `stylelint.config.js`
 
-```js
+```ts
 module.exports = {
     extends: [
         'stylelint-config-standard-scss',
@@ -454,7 +454,7 @@ pnpm add -D prettier eslint-config-prettier eslint-plugin-prettier stylelint-con
 
 修改 `.eslintrc.js` 来解决与 eslint 的冲突
 
-```js
+```ts
 extends: [
     // ...
     'plugin:prettier/recommended' // 一定要放在最后一项
@@ -476,7 +476,7 @@ rules: {
 
 修改 `stylelint.config.js` 来解决与 stylelint 的冲突
 
-```js
+```ts
 extends: [
     'stylelint-config-prettier' // 一定要放在最后一项
 ]
@@ -536,7 +536,7 @@ rules: {
 
 解决办法：配置 eslint 规则
 
-```js
+```ts
 rules: {
     'import/no-extraneous-dependencies': ['error', { devDependencies: true }]
 }
@@ -556,20 +556,20 @@ env: {
 
 ### 环境区分
 
-在根目录下新建 config 文件夹用来存放环境变量配置，同时修改 vite 环境变量的根目录
+在根目录下新建 env 文件夹用来存放环境变量配置，同时修改 vite 环境变量的根目录
 
 修改 `vite.config.js`
 
-```js
+```ts
 export default defineConfig({
     envDir: resolve(__dirname, 'config')
 })
 ```
 
-同时新增 config 文件夹
+同时新增 env 文件夹
 
-```js
-├── config/
+```ts
+├── env/
 |   ├── .env.development        // 开发环境
 |   ├── .env.production         // 生产环境
 ```
