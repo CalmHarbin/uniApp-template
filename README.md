@@ -14,16 +14,18 @@
 -   <input type="checkbox" checked>集成 `Eslint` + `Stylelint` + `Prettier` 来规范和格式化代码</input>
 -   <input type="checkbox" checked>环境区分</input>
 -   <input type="checkbox" checked>封装 `uni-request` 请求</input>
--   <input type="checkbox">集成 `Mock` 辅助开发</input>
+-   <input type="checkbox" checked>集成 `Mock` 辅助开发</input>
 -   <input type="checkbox">集成 `uni-ui`</input>
 
 项目整体目录
 
 ```ts
 ├── dist/                   // 打包文件的目录
-├── env/                 // 环境配置目录
+├── env/                    // 环境配置目录
 |   ├── .env.development    // 开发环境
 |   ├── .env.production     // 生产环境
+├── mock/                   // mock
+|   ├── index.ts
 ├── src/
 |   ├── assets/             // 存放图片
 |   ├── components/         // 自定义组件
@@ -556,7 +558,14 @@ env: {
 
 ### 环境区分
 
-在根目录下新建 env 文件夹用来存放环境变量配置，同时修改 vite 环境变量的根目录
+实现功能：
+
+-   可以直接区分开发环境和生产环境
+-   自定义环境变量增加 typescript 提示
+
+在根目录下新建 env 文件夹用来存放环境变量配置文件，同时修改 vite 配置（环境变量的根目录）。
+
+> 因为 vite 默认是将项目根目录作为环境变量配置的目录，所以我们需要修改下 vite 的配置指向 env 文件夹
 
 修改 `vite.config.js`
 
@@ -570,11 +579,36 @@ export default defineConfig({
 
 ```ts
 ├── env/
-|   ├── .env.development        // 开发环境
-|   ├── .env.production         // 生产环境
+    ├── .env.development        // 开发环境
+    ├── .env.production         // 生产环境
+    ├── index.d.ts              // 声明文件
+```
+
+需要检查下 `tsconfig.json` 文件是否包含了 `env/index.d.ts`，如果没有需要我们添加一下。
+
+```ts
+"include": ["env/index.d.ts"]
+```
+
+编辑 `src/.env.d.ts` 文件增加自定义变量的声明
+
+```ts
+/** 扩展环境变量import.meta.env */
+interface ImportMetaEnv {
+    /** 这里增加自定义的声明 */
+    VITE_REQUEST_BASE_URL: string
+}
 ```
 
 ### 封装 `uni-request` 请求
+
+实现功能：
+
+-   统一配置接口地址
+-   统一设置超时时间/报文格式/报文加密
+-   统一身份认证
+-   统一处理登录超时/接口异常提示
+-   统一返回接口格式
 
 新建 `src/utils/request/index.ts` 用来存放我们的代码。
 
@@ -598,16 +632,24 @@ type responseType = {
 const request = (config: UniApp.RequestOptions) => {
     let url: string
     if (/^(http|https):\/\/.*/.test(config.url)) {
-        // 如果是以http/https开头的则不添加VUE_BASE_URL
+        // 如果是以http/https开头的则不添加VITE_REQUEST_BASE_URL
         url = config.url
     } else {
-        url = import.meta.env.VUE_BASE_URL + config.url
+        url = import.meta.env.VITE_REQUEST_BASE_URL + config.url
     }
     return new Promise<responseType>((resolve, reject) => {
         uni.request({
             ...config,
             url,
+            /** 统一设置超时时间 */
             timeout: config.timeout || 60000,
+            header: {
+                ...config.header,
+                /** 统一报文格式 */
+                'Content-Type': 'application/json;charset=UTF-8'
+                /** 统一身份认证 */
+                // Authorization: Token
+            },
             success(res) {
                 // 200状态码表示成功
                 if (res.statusCode === 200) {
@@ -671,4 +713,101 @@ request
     .then((res) => {
         console.log(res)
     })
+```
+
+### 集成 `Mock` 辅助开发
+
+> 因为 mockjs 只适用于 h5，故小程序部分自行考虑。
+
+实现功能：
+
+-   统一管理我们想要 mock 的接口
+-   便捷切换是否 mock
+-   自由控制哪些接口 mock，哪些接口真实请求
+-   对于调用接口的地方是否 mock 是无感知的
+
+比如：
+
+```ts
+import request from '@/utils/request'
+/**
+ * 这样写，既可以是mock数据，也可以是调用接口。
+ */
+request.get('/getUserInfo')
+```
+
+安装 `mock`
+
+```sh
+pnpm add mockjs
+pnpm add -D @types/mockjs
+```
+
+前面我们在环境变量里添加了统一接口地址。我们先制定如下规则：
+
+```
+# 请求接口地址
+VITE_REQUEST_BASE_URL = /dev # 这样可以直接使用代理请求
+VITE_REQUEST_BASE_URL = /dev/mock # 这样就可以开启mock
+VITE_REQUEST_BASE_URL = https://xxx.com/api # 这样就是直接请求接口
+```
+
+根目录下创建 `mock/index.ts` 文件来存放我们的 Mock 规则。
+
+```ts
+import Mock from 'mockjs'
+
+// 基于我们制定的规则，这里必须做下判断，这个很重要。
+if (/\/mock$/.test(import.meta.env.VITE_REQUEST_BASE_URL)) {
+    // 这里添加 /getUserInfo 这个接口mock数据
+    Mock.mock(`${import.meta.env.VITE_REQUEST_BASE_URL}/getUserInfo`, {
+        code: 200,
+        success: true,
+        msg: '',
+        result: {
+            name: Mock.Random.cname()
+        }
+    })
+}
+```
+
+在 main.js 中引入下。（为什么要引入？不引入代码怎么执行啊）
+
+```ts
+import '../mock'
+```
+
+接下来改造我们封装的请求。
+
+修改 `src/utils/request/index.ts`
+
+```ts
+import Mock from 'mockjs'
+
+if (/^(http|https):\/\/.*/.test(config.url)) {
+    // 如果是以http/https开头的则不添加VITE_REQUEST_BASE_URL
+    url = config.url
+    // eslint-disable-next-line no-underscore-dangle
+} else if (Mock._mocked[import.meta.env.VITE_REQUEST_BASE_URL + config.url]) {
+    // 如果是mock数据,Mock._mocked上记录有所有已设置的mock规则。
+    url = import.meta.env.VITE_REQUEST_BASE_URL + config.url
+} else {
+    /**
+     * 开启mock时需要去掉mock路径,不能影响正常接口了。
+     * 如果碰巧你接口是 /api/mock/xxx这种,那VITE_REQUEST_BASE_URL就配置/api/mock/mock吧
+     */
+    url = import.meta.env.VITE_REQUEST_BASE_URL.replace(/\/mock$/, '') + config.url
+}
+```
+
+> 如果 `Mock._mocked` 报 `类型“typeof mockjs”上不存在属性“_mocked”`，需要我们扩展下声明
+
+```ts
+// src/shims-vue.d.ts
+
+// 扩展mock
+declare module 'mockjs' {
+    /** 所有已注册的mock规则  */
+    const _mocked: Record<string, any>
+}
 ```
