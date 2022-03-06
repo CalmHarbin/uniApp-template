@@ -49,6 +49,9 @@ export default defineComponent({
         }
 
         return { city, laglnt, getUserInfo, apiTest }
+    },
+    mounted() {
+        console.log('this访问store', this.$store.state.system.title)
     }
 })
 </script>
