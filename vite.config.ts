@@ -29,7 +29,7 @@ export default defineConfig({
         proxy: {
             // 个人习惯，这里就用/dev作为前缀了
             '/dev': {
-                target: 'https://xxx.com/api',
+                target: 'https://m.douban.com',
                 changeOrigin: true,
                 // 路径重写，去掉/dev
                 rewrite: (path) => path.replace(/^\/dev/, '')

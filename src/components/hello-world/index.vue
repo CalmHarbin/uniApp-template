@@ -2,6 +2,9 @@
     <view>hello-world</view>
 
     <view>你当前的城市是: {{ city }}，经纬度：{{ laglnt.lat }}，{{ laglnt.lng }}</view>
+
+    <button @click="getUserInfo">获取mock数据</button>
+    <button @click="apiTest">调用豆瓣接口</button>
 </template>
 
 <script lang="ts">
@@ -29,7 +32,23 @@ export default defineComponent({
             laglnt.lng = res.lon
         })
 
-        return { city, laglnt }
+        const getUserInfo = () => {
+            request.get('/getUserInfo').then((res) => {
+                console.log(res.result)
+            })
+        }
+
+        const apiTest = () => {
+            request
+                .get('/j/puppy/frodo_landing', {
+                    include: 'anony_home'
+                })
+                .then((res) => {
+                    console.log(res)
+                })
+        }
+
+        return { city, laglnt, getUserInfo, apiTest }
     }
 })
 </script>
