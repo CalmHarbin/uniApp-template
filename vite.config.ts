@@ -4,7 +4,7 @@ import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    envDir: resolve(__dirname, 'config'),
+    envDir: resolve(__dirname, 'env'),
     plugins: [uni()],
     resolve: {
         // 配置别名
