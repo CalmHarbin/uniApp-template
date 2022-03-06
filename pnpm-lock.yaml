@@ -17,6 +17,7 @@ specifiers:
   '@dcloudio/uni-mp-weixin': ^3.0.0-alpha-3030420211227002
   '@dcloudio/uni-quickapp-webview': ^3.0.0-alpha-3030420211227002
   '@dcloudio/vite-plugin-uni': ^3.0.0-alpha-3030420211227002
+  '@types/mockjs': ^1.0.6
   '@typescript-eslint/eslint-plugin': ^5.12.1
   '@typescript-eslint/parser': ^5.12.1
   autoprefixer: ^10.4.0
@@ -27,6 +28,7 @@ specifiers:
   eslint-plugin-import: ^2.25.2
   eslint-plugin-prettier: ^4.0.0
   eslint-plugin-vue: ^8.5.0
+  mockjs: ^1.1.0
   prettier: ^2.5.1
   sass: ^1.49.9
   stylelint: ^14.5.3
@@ -55,6 +57,7 @@ dependencies:
   '@dcloudio/uni-mp-toutiao': 3.0.0-alpha-3040020220225001_vue@3.2.31
   '@dcloudio/uni-mp-weixin': 3.0.0-alpha-3040020220225001_vue@3.2.31
   '@dcloudio/uni-quickapp-webview': 3.0.0-alpha-3040020220225001_vue@3.2.31
+  mockjs: 1.1.0
   vue: 3.2.31
   vue-i18n: 9.1.9_vue@3.2.31
   vuex: 4.0.2_vue@3.2.31
@@ -64,6 +67,7 @@ devDependencies:
   '@dcloudio/uni-automator': 3.0.0-alpha-3040020220225001_vue@3.2.31
   '@dcloudio/uni-cli-shared': 3.0.0-alpha-3040020220225001_vue@3.2.31
   '@dcloudio/vite-plugin-uni': 3.0.0-alpha-3040020220225001_vite@2.8.4+vue@3.2.31
+  '@types/mockjs': 1.0.6
   '@typescript-eslint/eslint-plugin': 5.12.1_27a0c788acac7d65514027b167e3b3f6
   '@typescript-eslint/parser': 5.12.1_eslint@8.10.0+typescript@4.5.5
   autoprefixer: 10.4.2
@@ -1958,6 +1962,10 @@ packages:
 
   /@types/minimist/1.2.2:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
+    dev: true
+
+  /@types/mockjs/1.0.6:
+    resolution: {integrity: sha512-Yu5YlqbYZyqsd6LjO4e8ONJDN9pTSnciHDcRP4teNOh/au2b8helFhgRx+3w8xsTFEnwr9jtfTVJbAx+eYmlHA==}
     dev: true
 
   /@types/node/17.0.21:
@@ -5261,6 +5269,13 @@ packages:
     dependencies:
       minimist: 1.2.5
     dev: true
+
+  /mockjs/1.1.0:
+    resolution: {integrity: sha512-eQsKcWzIaZzEZ07NuEyO4Nw65g0hdWAyurVol1IPl1gahRwY+svqzfgfey8U8dahLwG44d6/RwEzuK52rSa/JQ==}
+    hasBin: true
+    dependencies:
+      commander: 2.20.3
+    dev: false
 
   /module-alias/2.2.2:
     resolution: {integrity: sha512-A/78XjoX2EmNvppVWEhM2oGk3x4lLxnkEA4jTbaK97QKSDjkIoOsKQlfylt/d3kKKi596Qy3NP5XrXJ6fZIC9Q==}
