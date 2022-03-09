@@ -1,6 +1,7 @@
 <template>
     <view class="content">
         <image class="logo" src="@/assets/logo.png" />
+        <view>哈哈哈哈</view>
         <view class="text-area">
             <text class="title">{{ title }}</text>
         </view>
@@ -15,6 +16,29 @@ import HelloWorld from '@/components/hello-world/index.vue'
 
 const title = ref('Hello')
 </script>
+
+<!-- <script lang="ts">
+// import { defineComponent, ref } from 'vue'
+import HelloWorld from '@/components/hello-world/index.vue'
+
+export default {
+    name: 'PageIndex',
+    components: { HelloWorld },
+    data() {
+        return {
+            title: 'Hello'
+        }
+    },
+    // setup() {
+    //     const title = ref('Hello')
+
+    //     return { title }
+    // },
+    mounted() {
+        console.log(33)
+    }
+}
+</script> -->
 
 <style lang="scss">
 .content {

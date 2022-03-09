@@ -1,10 +1,16 @@
 <template>
+    <uni-rate :size="18" :value="5" />
     <view>hello-world</view>
 
     <view>你当前的城市是: {{ city }}，经纬度：{{ laglnt.lat }}，{{ laglnt.lng }}</view>
 
     <button @click="getUserInfo">获取mock数据</button>
-    <button @click="apiTest">调用豆瓣接口</button>
+    <button @click="apiTest">调用代理接口</button>
+    <button @click="open">打开弹窗</button>
+
+    <uni-popup ref="popup" type="bottom" background-color="#fff">
+        <image class="logo" src="@/assets/logo.png" />
+    </uni-popup>
 </template>
 
 <script lang="ts">
@@ -21,6 +27,7 @@ export default defineComponent({
             lat: '',
             lng: ''
         })
+        const popup = ref()
 
         console.log('useStore访问store', store.state.system.title)
 
@@ -40,18 +47,23 @@ export default defineComponent({
 
         const apiTest = () => {
             request
-                .get('/j/puppy/frodo_landing', {
-                    include: 'anony_home'
+                .get('/sug', {
+                    code: 'utf-8',
+                    q: '苹果'
                 })
                 .then((res) => {
                     console.log(res)
                 })
         }
 
-        return { city, laglnt, getUserInfo, apiTest }
-    },
-    mounted() {
-        console.log('this访问store', this.$store.state.system.title)
+        const open = () => {
+            popup.value.open()
+        }
+
+        return { city, laglnt, popup, getUserInfo, apiTest, open }
     }
+    // mounted() {
+    //     console.log('this访问store', this.$store.state.system.title)
+    // }
 })
 </script>
