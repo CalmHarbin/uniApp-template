@@ -16,6 +16,7 @@ specifiers:
   '@dcloudio/uni-mp-toutiao': ^3.0.0-alpha-3030420211227002
   '@dcloudio/uni-mp-weixin': ^3.0.0-alpha-3030420211227002
   '@dcloudio/uni-quickapp-webview': ^3.0.0-alpha-3030420211227002
+  '@dcloudio/uni-ui': ^1.4.12
   '@dcloudio/vite-plugin-uni': ^3.0.0-alpha-3030420211227002
   '@types/mockjs': ^1.0.6
   '@typescript-eslint/eslint-plugin': ^5.12.1
@@ -57,6 +58,7 @@ dependencies:
   '@dcloudio/uni-mp-toutiao': 3.0.0-alpha-3040020220225001_vue@3.2.31
   '@dcloudio/uni-mp-weixin': 3.0.0-alpha-3040020220225001_vue@3.2.31
   '@dcloudio/uni-quickapp-webview': 3.0.0-alpha-3040020220225001_vue@3.2.31
+  '@dcloudio/uni-ui': 1.4.12
   mockjs: 1.1.0
   vue: 3.2.31
   vue-i18n: 9.1.9_vue@3.2.31
@@ -1748,6 +1750,10 @@ packages:
       - supports-color
       - ts-node
       - vue
+    dev: false
+
+  /@dcloudio/uni-ui/1.4.12:
+    resolution: {integrity: sha512-sGVHU8Fz/L6NtrsClw8d38SPI16oCgBBQ7fYBVTV1hgS8brFVL56ti9tbY/Qx5qw6+ZPzAzb9lfiG6Tqi4kIJw==}
     dev: false
 
   /@dcloudio/vite-plugin-uni/3.0.0-alpha-3040020220225001_vite@2.8.4+vue@3.2.31:
