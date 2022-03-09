@@ -15,7 +15,7 @@
 -   <input type="checkbox" checked>环境区分</input>
 -   <input type="checkbox" checked>封装 `uni-request` 请求</input>
 -   <input type="checkbox" checked>集成 `Mock` 辅助开发</input>
--   <input type="checkbox">集成 `uni-ui`</input>
+-   <input type="checkbox" checked>集成 `uni-ui`</input>
 
 项目整体目录
 
@@ -811,3 +811,47 @@ declare module 'mockjs' {
     const _mocked: Record<string, any>
 }
 ```
+
+### 集成 `uni-ui`
+
+因为我们使用的是 `vite` 开发的，所以我们只能使用 `npm+easycom` 的方式集成
+
+安装 uni-ui
+
+```
+pnpm add @dcloudio/uni-ui
+```
+
+打开项目根目录下的 pages.json 并添加 easycom 节点：
+
+```jsonc
+// pages.json
+{
+    "easycom": {
+        "autoscan": true,
+        "custom": {
+            // uni-ui 规则如下配置
+            "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+        }
+    },
+
+    // 其他内容
+    "pages": [
+        // ...
+    ]
+}
+```
+
+然后就可以直接使用了
+
+> 注意无需再次引入
+
+```vue
+<uni-rate :size="18" :value="5" />
+```
+
+H5 和小程序效果图
+
+<img src="http://file.calmharbin.icu/20220309234926.png" width="400" style="flex: 0 0 200px;" />
+
+<img src="http://file.calmharbin.icu/20220309234817.png" width="400" />
