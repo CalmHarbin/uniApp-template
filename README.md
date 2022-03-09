@@ -66,7 +66,7 @@
 npx degit dcloudio/uni-preset-vue#vite-ts uniApp-template
 ```
 
-或者直接从 [gitee](https://gitee.com/dcloud/uni-preset-vue/repository/archive/vite-ts.zip) 上下载。
+网络不好可以或者直接从 [gitee](https://gitee.com/dcloud/uni-preset-vue/repository/archive/vite-ts.zip) 上下载。
 
 ### 做一些简单的配置
 
@@ -855,3 +855,16 @@ H5 和小程序效果图
 <img src="http://file.calmharbin.icu/20220309234926.png" width="400" style="flex: 0 0 200px;" />
 
 <img src="http://file.calmharbin.icu/20220309234817.png" width="400" />
+
+### 写在最后
+
+如果你想快速的体验 vue3 开发，你可以拉取我的源码直接开发。
+
+> github: https://github.com/CalmHarbin/uniApp-template
+
+创作不易、欢迎 ⭐
+
+TODO：
+
+-   <input type="checkbox">使用 `Hbuilder` 创建 `uni-app` 模板</input>
+-   <input type="checkbox">搭建一个 `Taro+vue3` 模板</input>
