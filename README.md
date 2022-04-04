@@ -571,7 +571,7 @@ env: {
 
 ```ts
 export default defineConfig({
-    envDir: resolve(__dirname, 'config')
+    envDir: resolve(__dirname, 'env')
 })
 ```
 
