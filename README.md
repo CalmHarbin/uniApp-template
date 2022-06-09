@@ -209,11 +209,9 @@ keys.forEach((key) => {
 /** 全局的state,这个看自己的需求，如果有用到就在createStore中添加 */
 export interface rootStateType {}
 
-export default createStore <
-    StateType >
-    {
-        modules
-    }
+export default createStore<StateType>({
+    modules
+})
 ```
 
 在 modules 文件夹中根据自己的业务来创建模块，同时在 index.d.ts 中加入声明。例如：`src/store/modules/system.ts`
