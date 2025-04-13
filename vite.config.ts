@@ -16,8 +16,10 @@ export default defineConfig({
         // css预处理器
         preprocessorOptions: {
             scss: {
-                // 因为uni.scss可以全局使用，这里根据自己的需求调整
-                additionalData: '@import "./src/styles/global.scss";'
+                additionalData: `
+                    @use "@/styles/global.scss" as *;
+                `,
+                api: 'modern' // 使用新的 API
             }
         }
     },
@@ -38,7 +40,7 @@ export default defineConfig({
     },
     build: {
         // 禁用 gzip 压缩大小报告，以提升构建性能
-        brotliSize: false,
+        reportCompressedSize: false,
         /** 配置h5打包js,css,img分别在不同文件夹start */
         assetsDir: 'static/img/',
         rollupOptions: {

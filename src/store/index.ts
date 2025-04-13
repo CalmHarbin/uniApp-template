@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 import { StateType } from './index.d'
 
 // 批量引入其他module，
-const files = import.meta.globEager('./modules/*.ts') // vite的写法
+const files = import.meta.glob('./modules/*.ts', { eager: true }) // vite的新写法
 const keys = Object.keys(files)
 
 const modules: any = {}
